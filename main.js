@@ -66,35 +66,6 @@ async function applyUserAgentFixes() {
   }
 }
 
-async function addSourceView() {
-  if (!navigator.serviceWorker) {
-    return;
-  }
-  await Promise.all([
-    promiseContentLoaded,
-    navigator.serviceWorker.register('sw.js', { scope: '/' }),
-  ]);
-  let $li = createElement('li');
-  $li.appendChild(createElement('a', {
-    href: 'index.html',
-    target: '_blank',
-    textContent: 'View source',
-  }));
-  let $nav = $('footer ul');
-  $nav.insertBefore($li, $nav.firstElementChild);
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.code == 'KeyU' && isCmdOrCtrlPressed(evt)) {
-      // This won't work as expected on Firefox, because it blocks
-      // opening new window in keyboard events. It is not possible
-      // to work around this issue. See
-      // https://bugzilla.mozilla.org/show_bug.cgi?id=1322006
-      evt.preventDefault();
-      $li.firstChild.click();
-    }
-  });
-}
-
 async function addThemeSwitcher() {
   await promiseContentLoaded;
   document.body.appendChild(createElement('input', {
@@ -180,7 +151,6 @@ async function addSiteTransition() {
 }
 
 applyUserAgentFixes();
-addSourceView();
 addThemeSwitcher();
 addSiteTransition();
 // Wait for one frame after loaded before enabling transition.
